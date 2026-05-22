@@ -1,79 +1,70 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-/* ADD TASK (FIXED FOR GITHUB PAGES) */
-window.addTask = function () {
+/* ADD TASK */
+function addTask() {
+  const title = document.getElementById("title");
+  const description = document.getElementById("description");
+  const status = document.getElementById("status");
 
-    const title = document.getElementById("title");
-    const description = document.getElementById("description");
-    const status = document.getElementById("status");
+  if (!title.value.trim() || !description.value.trim()) {
+    alert("Please enter title and description");
+    return;
+  }
 
-    if (!title || !description || !status) return;
+  const task = {
+    id: Date.now(),
+    title: title.value,
+    description: description.value,
+    status: status.value
+  };
 
-    if (!title.value.trim() || !description.value.trim()) {
-        alert("Please enter title and description");
-        return;
-    }
+  tasks.push(task);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 
-    const task = {
-        id: Date.now(),
-        title: title.value,
-        description: description.value,
-        status: status.value
-    };
+  title.value = "";
+  description.value = "";
 
-    tasks.push(task);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    title.value = "";
-    description.value = "";
-
-    loadTasks();
-};
+  loadTasks();
+}
 
 /* LOAD TASKS */
 function loadTasks() {
+  const taskList = document.getElementById("taskList");
+  if (!taskList) return;
 
-    const taskList = document.getElementById("taskList");
-    if (!taskList) return;
+  if (tasks.length === 0) {
+    taskList.innerHTML = "<p>No tasks added yet</p>";
+    return;
+  }
 
-    if (tasks.length === 0) {
-        taskList.innerHTML = "<p>No tasks added yet</p>";
-        return;
-    }
+  taskList.innerHTML = tasks.map(task => `
+    <div class="task">
+      <h3>${task.title}</h3>
+      <p>${task.description}</p>
+      <p>Status: ${task.status}</p>
 
-    taskList.innerHTML = tasks.map(task => `
-        <div style="margin-bottom:10px;">
-            <h3>${task.title}</h3>
-            <p>${task.description}</p>
-            <p>Status: ${task.status}</p>
-
-            <button onclick="updateStatus(${task.id})">Mark Completed</button>
-            <button onclick="deleteTask(${task.id})">Delete</button>
-
-            <hr>
-        </div>
-    `).join("");
+      <button class="btn btn-success btn-sm" onclick="updateStatus(${task.id})">Mark Completed</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">Delete</button>
+    </div>
+  `).join("");
 }
 
 /* UPDATE STATUS */
-window.updateStatus = function (id) {
+function updateStatus(id) {
+  tasks = tasks.map(task =>
+    task.id === id ? { ...task, status: "Completed" } : task
+  );
 
-    tasks = tasks.map(task =>
-        task.id === id ? { ...task, status: "Completed" } : task
-    );
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
-};
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
 
 /* DELETE TASK */
-window.deleteTask = function (id) {
-
-    tasks = tasks.filter(task => task.id !== id);
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
-};
+function deleteTask(id) {
+  tasks = tasks.filter(task => task.id !== id);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  loadTasks();
+}
 
 /* INIT */
 window.onload = loadTasks;
