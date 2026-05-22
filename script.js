@@ -1,3 +1,4 @@
+// Load tasks from localStorage or start with empty array
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 /* ADD TASK */
@@ -21,6 +22,7 @@ window.addTask = function() {
   tasks.push(task);
   localStorage.setItem("tasks", JSON.stringify(tasks));
 
+  // Clear inputs
   title.value = "";
   description.value = "";
 
@@ -42,7 +44,6 @@ function loadTasks() {
       <h3>${task.title}</h3>
       <p>${task.description}</p>
       <p>Status: ${task.status}</p>
-
       <button class="btn btn-success btn-sm" onclick="updateStatus(${task.id})">Mark Completed</button>
       <button class="btn btn-danger btn-sm" onclick="deleteTask(${task.id})">Delete</button>
     </div>
