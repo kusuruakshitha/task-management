@@ -1,76 +1,40 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-const API = "http://localhost:3000";
+window.addTask = function () {
+    const title = document.getElementById("title");
+    const description = document.getElementById("description");
+    const status = document.getElementById("status");
 
-// ADD TASK
-function addTask() {
+    if (!title.value || !description.value) return alert("Fill all fields");
 
-    const task = {
+    tasks.push({
         id: Date.now(),
-        title: document.getElementById("title").value,
-        description: document.getElementById("description").value,
-        status: document.getElementById("status").value
-    };
-
-    tasks.push(task);
+        title: title.value,
+        description: description.value,
+        status: status.value
+    });
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
+    title.value = "";
+    description.value = "";
+
     loadTasks();
-}
+};
 
-// LOAD TASKS
 function loadTasks() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
 
-    let output = "";
-
-    tasks.forEach(task => {
-
-        output += `
-        <div>
-            <h3>${task.title}</h3>
-            <p>${task.description}</p>
-            <p>Status: ${task.status}</p>
-
-            <button onclick="updateStatus(${task.id})">
-                Mark Completed
-            </button>
-
-            <button onclick="deleteTask(${task.id})">
-                Delete
-            </button>
-
-            <hr>
-        </div>
+    tasks.forEach(t => {
+        taskList.innerHTML += `
+            <div>
+                <h3>${t.title}</h3>
+                <p>${t.description}</p>
+                <p>${t.status}</p>
+            </div>
         `;
     });
-
-    document.getElementById("taskList").innerHTML = output;
 }
 
-// UPDATE STATUS
-function updateStatus(id) {
-
-    tasks = tasks.map(task => {
-        if (task.id === id) {
-            task.status = "Completed";
-        }
-        return task;
-    });
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    loadTasks();
-}
-
-// DELETE TASK
-function deleteTask(id) {
-
-    tasks = tasks.filter(task => task.id !== id);
-
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-
-    loadTasks();
-}
-
-loadTasks();
+window.onload = loadTasks;
