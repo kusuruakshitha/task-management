@@ -66,5 +66,5 @@ window.deleteTask = function(id) {
   loadTasks();
 };
 
-/* INIT */
-window.onload = loadTasks;
+/* INIT — run immediately when page loads */
+document.addEventListener("DOMContentLoaded", loadTasks);
