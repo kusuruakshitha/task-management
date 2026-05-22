@@ -24,7 +24,7 @@ function addTask() {
   title.value = "";
   description.value = "";
 
-  loadTasks();
+  loadTasks(); // refresh list
 }
 
 /* LOAD TASKS */
@@ -54,7 +54,6 @@ function updateStatus(id) {
   tasks = tasks.map(task =>
     task.id === id ? { ...task, status: "Completed" } : task
   );
-
   localStorage.setItem("tasks", JSON.stringify(tasks));
   loadTasks();
 }
