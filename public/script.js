@@ -1,7 +1,7 @@
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 /* ADD TASK */
-function addTask() {
+window.addTask = function() {
   const title = document.getElementById("title");
   const description = document.getElementById("description");
   const status = document.getElementById("status");
@@ -24,8 +24,8 @@ function addTask() {
   title.value = "";
   description.value = "";
 
-  loadTasks(); // refresh list
-}
+  loadTasks();
+};
 
 /* LOAD TASKS */
 function loadTasks() {
@@ -50,20 +50,20 @@ function loadTasks() {
 }
 
 /* UPDATE STATUS */
-function updateStatus(id) {
+window.updateStatus = function(id) {
   tasks = tasks.map(task =>
     task.id === id ? { ...task, status: "Completed" } : task
   );
   localStorage.setItem("tasks", JSON.stringify(tasks));
   loadTasks();
-}
+};
 
 /* DELETE TASK */
-function deleteTask(id) {
+window.deleteTask = function(id) {
   tasks = tasks.filter(task => task.id !== id);
   localStorage.setItem("tasks", JSON.stringify(tasks));
   loadTasks();
-}
+};
 
 /* INIT */
 window.onload = loadTasks;
